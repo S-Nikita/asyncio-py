@@ -5,7 +5,8 @@ from database import db_main
 async def main_async():
         print('Start:')
         characters = await get_data()
-        await db_main(characters)
+        for char in characters:
+                await db_main(char)
 
 if __name__ == "__main__":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

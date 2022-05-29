@@ -33,15 +33,15 @@ class SW_Character(Base):
     vehicles = Column(String)
 
 
-async def db_main(data):
+async def db_main(item):
     engine = create_async_engine(
         "postgresql+asyncpg://postgres:756894@localhost:5432/star_wars",
         echo=True,
     )
 
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(Base.metadata.drop_all)
+    #     await conn.run_sync(Base.metadata.create_all)
 
     async_session = sessionmaker(
         engine, expire_on_commit=False, class_=AsyncSession
@@ -49,24 +49,23 @@ async def db_main(data):
 
     async with async_session() as session:
         async with session.begin():
-            for item in data:
-                char = SW_Character(
-                                        id = item['id'],
-                                        birth_year = item['birth_year'],
-                                        eye_color = item['eye_color'],
-                                        films = item['films'],
-                                        gender = item['gender'],
-                                        hair_color = item['hair_color'],
-                                        height = item['height'],
-                                        homeworld = item['homeworld'],
-                                        mass = item['mass'],
-                                        name = item['name'],
-                                        skin_color = item['skin_color'],
-                                        species = item['species'],
-                                        starships = item['starships'],
-                                        vehicles = item['vehicles']
-                                    )
-                session.add(char)
-                await session.commit()
-
+            char = SW_Character(
+                        id = item['id'],
+                        birth_year = item['birth_year'],
+                        eye_color = item['eye_color'],
+                        films = item['films'],
+                        gender = item['gender'],
+                        hair_color = item['hair_color'],
+                        height = item['height'],
+                        homeworld = item['homeworld'],
+                        mass = item['mass'],
+                        name = item['name'],
+                        skin_color = item['skin_color'],
+                        species = item['species'],
+                        starships = item['starships'],
+                        vehicles = item['vehicles']
+                    )
+            session.add(char)
+            session.commit()
+    engine.dispose()
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

@@ -36,8 +36,7 @@ async def get_params(chars_list, session):
         character_dict['vehicles'] = ','.join(str(i) for i in [(await (await session.get(item)).json(content_type=None)).get('name') for item in char.get('vehicles')])
 
         characters.append(character_dict)
-        
-        return characters
+    return characters
 
 
 async def get_data():
@@ -47,7 +46,7 @@ async def get_data():
         chars_list = [make_request(char_id, session) for char_id in range(1, chars_count + 1)]
         chars = await asyncio.gather(*chars_list)
         res = await get_params(chars, session)
-
     return res
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+# asyncio.run(get_data())
